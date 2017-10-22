@@ -34,6 +34,8 @@ public class ElevatorImplTest {
         assertEquals(3, unitUnderTest.getCurrentFloor());
         unitUnderTest.moveElevator(-2);
         assertEquals(0, unitUnderTest.getCurrentFloor());
+        unitUnderTest.moveElevator(3);
+        assertEquals(2, unitUnderTest.getCurrentFloor());
     }
 
 }
