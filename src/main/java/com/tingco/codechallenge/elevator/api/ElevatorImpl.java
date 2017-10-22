@@ -66,8 +66,8 @@ public class ElevatorImpl implements Elevator {
         }
 
         int restrictedToFloor = toFloor;
-        if(toFloor > numberOfFloors) {
-            restrictedToFloor = numberOfFloors;
+        if(toFloor >= numberOfFloors) {
+            restrictedToFloor = numberOfFloors-1;
         }
         if(toFloor < 0) {
             restrictedToFloor = 0;

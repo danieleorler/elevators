@@ -23,7 +23,7 @@ public class ElevatorImplTest {
     }
 
     @Test
-    public void should_arrive_to_requested_floor() {
+    public void should_arrive_to_correct_floor() {
         unitUnderTest.moveElevator(2);
         assertEquals(2, unitUnderTest.getCurrentFloor());
         unitUnderTest.moveElevator(0);
@@ -31,7 +31,7 @@ public class ElevatorImplTest {
         unitUnderTest.moveElevator(0);
         assertEquals(0, unitUnderTest.getCurrentFloor());
         unitUnderTest.moveElevator(15);
-        assertEquals(3, unitUnderTest.getCurrentFloor());
+        assertEquals(2, unitUnderTest.getCurrentFloor());
         unitUnderTest.moveElevator(-2);
         assertEquals(0, unitUnderTest.getCurrentFloor());
         unitUnderTest.moveElevator(3);
