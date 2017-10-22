@@ -6,13 +6,23 @@ package com.tingco.codechallenge.elevator.api;
  * @author Sven Wesley
  *
  */
-interface Elevator {
+public interface Elevator extends Comparable {
 
     /**
      * Enumeration for describing elevator's direction.
      */
     enum Direction {
-        UP, DOWN, NONE
+        UP(1), DOWN(-1), NONE(0);
+
+        private int change;
+
+        Direction(int change) {
+            this.change = change;
+        }
+
+        public int change() {
+            return change;
+        }
     }
 
     /**
@@ -56,6 +66,6 @@ interface Elevator {
      *
      * @return int actual floor at the moment.
      */
-    int currentFloor();
+    int getCurrentFloor();
 
 }
