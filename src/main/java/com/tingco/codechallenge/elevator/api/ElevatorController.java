@@ -36,6 +36,11 @@ public interface ElevatorController {
      */
     void releaseElevator(Elevator elevator);
 
+    /**
+     * Get a free elevator by id
+     * @param id the elevator id
+     * @return the required {@link Elevator}
+     */
     Elevator getElevator(int id);
 
 }

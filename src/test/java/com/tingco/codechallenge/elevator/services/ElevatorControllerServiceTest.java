@@ -13,7 +13,6 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -34,12 +33,13 @@ public class ElevatorControllerServiceTest {
 
     private List<Elevator> elevators;
     private ElevatorControllerService unitUnderTest;
+    private int numberOfFloors = 5;
 
     @Before
     public void setUp() {
         elevators = new ArrayList<>();
-        elevators.add(new ElevatorImpl(0, eventBus));
-        elevators.add(new ElevatorImpl(1, eventBus));
+        elevators.add(new ElevatorImpl(0, eventBus, numberOfFloors));
+        elevators.add(new ElevatorImpl(5, eventBus, numberOfFloors));
 
         unitUnderTest = new ElevatorControllerService(executor, elevators);
     }
@@ -60,25 +60,25 @@ public class ElevatorControllerServiceTest {
 
     @Test
     public void should_provide_the_closest_elevator() {
-        assertEquals(1, unitUnderTest.requestElevator(2).getId());
-        assertEquals(0, unitUnderTest.requestElevator(-2).getId());
+        assertEquals(5, unitUnderTest.requestElevator(4).getId());
+        assertEquals(0, unitUnderTest.requestElevator(1).getId());
     }
 
     @Test
     public void should_return_the_requested_elevator() {
-        assertEquals(1, unitUnderTest.getElevator(1).getId());
+        assertEquals(5, unitUnderTest.getElevator(5).getId());
     }
 
     @Test(expected = ElevatorNotFoundException.class)
     public void should_throw_exception_when_trying_to_get_a_busy_elevator() {
         Elevator elevator = unitUnderTest.requestElevator(2);
-        assertEquals(1, unitUnderTest.getElevator(elevator.getId()).getId());
+        unitUnderTest.getElevator(elevator.getId()).getId();
     }
 
     @Test
     public void should_release_the_elevator() {
         List<Elevator> elevators = new ArrayList<>();
-        elevators.add(new ElevatorImpl(0, eventBus));
+        elevators.add(new ElevatorImpl(0, eventBus, numberOfFloors));
         unitUnderTest = new ElevatorControllerService(executor, elevators);
 
         Elevator elevator = unitUnderTest.requestElevator(2);

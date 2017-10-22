@@ -25,6 +25,8 @@ public class ElevatorApplication {
 
     @Value("${com.tingco.elevator.numberofelevators}")
     private int numberOfElevators;
+    @Value("${com.tingco.elevator.numberoffloors}")
+    private int numberOfFloors;
 
     /**
      * Start method that will be invoked when starting the Spring context.
@@ -61,7 +63,7 @@ public class ElevatorApplication {
     public List<Elevator> elevators(EventBus eventBus) {
         return IntStream
             .range(0, numberOfElevators)
-            .mapToObj(value -> new ElevatorImpl(value, eventBus))
+            .mapToObj(value -> new ElevatorImpl(value, eventBus, numberOfFloors))
             .collect(Collectors.toList());
     }
 

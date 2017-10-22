@@ -19,7 +19,7 @@ public class ElevatorImplTest {
 
     @Before
     public void setUp() {
-        unitUnderTest = new ElevatorImpl(0, eventBus, 5L);
+        unitUnderTest = new ElevatorImpl(0, eventBus, 3, 5L);
     }
 
     @Test
@@ -29,6 +29,10 @@ public class ElevatorImplTest {
         unitUnderTest.moveElevator(0);
         assertEquals(0, unitUnderTest.getCurrentFloor());
         unitUnderTest.moveElevator(0);
+        assertEquals(0, unitUnderTest.getCurrentFloor());
+        unitUnderTest.moveElevator(15);
+        assertEquals(3, unitUnderTest.getCurrentFloor());
+        unitUnderTest.moveElevator(-2);
         assertEquals(0, unitUnderTest.getCurrentFloor());
     }
 

@@ -23,21 +23,24 @@ public class ElevatorImpl implements Elevator {
     private int currentFloor = 0;
     private int addressedFloor = -1;
     private Direction direction = Direction.NONE;
+    private final int numberOfFloors;
 
 
 
-    public ElevatorImpl(int id, EventBus eventBus) {
+    public ElevatorImpl(int id, EventBus eventBus, int numberOfFloors) {
         this.id = id;
         this.eventBus = eventBus;
         this.currentFloor = id;
+        this.numberOfFloors = numberOfFloors;
         this.timeToFloor = 1000L;
     }
 
-    public ElevatorImpl(int id, EventBus eventBus, Long timeToFloor) {
+    public ElevatorImpl(int id, EventBus eventBus, int numberOfFloors, Long timeToFloor) {
         this.id = id;
         this.eventBus = eventBus;
         this.currentFloor = id;
         this.timeToFloor = timeToFloor;
+        this.numberOfFloors = numberOfFloors;
     }
 
     @Override
@@ -56,16 +59,25 @@ public class ElevatorImpl implements Elevator {
     }
 
     @Override
-    public void moveElevator(int toFloor) {
+    public void moveElevator(final int toFloor) {
 
         if(isBusy()) {
             throw new ElevatorBusyException("Elevator " + id + " is busy");
         }
-        addressedFloor = toFloor;
-        direction = movingDirection(toFloor);
+
+        int restrictedToFloor = toFloor;
+        if(toFloor > numberOfFloors) {
+            restrictedToFloor = numberOfFloors;
+        }
+        if(toFloor < 0) {
+            restrictedToFloor = 0;
+        }
+
+        addressedFloor = restrictedToFloor;
+        direction = movingDirection(restrictedToFloor);
         logger.debug("Elevator " + id + " going from floor " + currentFloor + " to floor " + addressedFloor);
 
-        IntStream.range(0, Math.abs(currentFloor-toFloor))
+        IntStream.range(0, Math.abs(currentFloor-restrictedToFloor))
             .forEach(value -> {
                 try {
                     Thread.sleep(timeToFloor);

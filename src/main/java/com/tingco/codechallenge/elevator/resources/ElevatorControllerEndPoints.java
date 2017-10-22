@@ -2,11 +2,12 @@ package com.tingco.codechallenge.elevator.resources;
 
 import com.tingco.codechallenge.elevator.api.Elevator;
 import com.tingco.codechallenge.elevator.api.ElevatorController;
+import com.tingco.codechallenge.elevator.api.Shaft;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.concurrent.Executor;
 
 /**
@@ -22,13 +23,16 @@ public final class ElevatorControllerEndPoints {
 
     private final ElevatorController elevatorController;
     private final Executor elevatorExecutor;
+    private final int numberOfFloors;
 
     @Autowired
     public ElevatorControllerEndPoints(
             ElevatorController elevatorController,
-            @Qualifier("elevatorExecutor") Executor elevatorExecutor) {
+            @Qualifier("elevatorExecutor") Executor elevatorExecutor,
+            @Value("${com.tingco.elevator.numberoffloors}") int numberOfFloors) {
         this.elevatorController = elevatorController;
         this.elevatorExecutor = elevatorExecutor;
+        this.numberOfFloors = numberOfFloors;
     }
 
     /**
@@ -42,8 +46,8 @@ public final class ElevatorControllerEndPoints {
     }
 
     @RequestMapping(value = "/shaft", method = RequestMethod.GET)
-    public List<Elevator> getElevators() {
-        return elevatorController.getElevators();
+    public Shaft getShaft() {
+        return new Shaft(numberOfFloors, elevatorController.getElevators());
     }
 
     @RequestMapping(value="/request/{floor}")
