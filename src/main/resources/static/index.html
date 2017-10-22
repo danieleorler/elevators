@@ -6,51 +6,21 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <h1>Hej</h1>
+        <h1>Elevators</h1>
+        <div id="docs">
+            <p>The request buttons on the left are ment to simulate an elevator request button.</p>
+            <p>By clicking on one of them the closest elevator comes to the related floor</p>
+            <p>Every other column represents an elevator. The green square on each column represents the elevator's position.</p>
+            <p>When the square is green then the elevator is available and you can use it. To use it click on it, enter the floor you want to reach and hit enter</p>
+            <p>If too many elevetors are requested, a message is printed on the console</p>
+        </div>
         <div id="content">
             <div class="elevator" id="base-elevator" style="display: none;">
                 <div class="floor" onclick="selectFloor(this)">
                     <input class="hidden" type="number" min="0" max="9" onkeypress="return goToFloor(event);">
                 </div>
-                <div class="floor" onclick="selectFloor(this)">
-                    <input class="hidden" type="number" min="0" max="9" onkeypress="return goToFloor(event);">
-                </div>
-                <div class="floor" onclick="selectFloor(this)">
-                    <input class="hidden" type="number" min="0" max="9" onkeypress="return goToFloor(event);">
-                </div>
-                <div class="floor" onclick="selectFloor(this)">
-                    <input class="hidden" type="number" min="0" max="9" onkeypress="return goToFloor(event);">
-                </div>
-                <div class="floor" onclick="selectFloor(this)">
-                    <input class="hidden" type="number" min="0" max="9" onkeypress="return goToFloor(event);">
-                </div>
-                <div class="floor" onclick="selectFloor(this)">
-                    <input class="hidden" type="number" min="0" max="9" onkeypress="return goToFloor(event);">
-                </div>
-                <div class="floor" onclick="selectFloor(this)">
-                    <input class="hidden" type="number" min="0" max="9" onkeypress="return goToFloor(event);">
-                </div>
-                <div class="floor" onclick="selectFloor(this)">
-                    <input class="hidden" type="number" min="0" max="9" onkeypress="return goToFloor(event);">
-                </div>
-                <div class="floor" onclick="selectFloor(this)">
-                    <input class="hidden" type="number" min="0" max="9" onkeypress="return goToFloor(event);">
-                </div>
-                <div class="floor" onclick="selectFloor(this)">
-                    <input class="hidden" type="number" min="0" max="9" onkeypress="return goToFloor(event);">
-                </div>
             </div>
-            <div id="controlls" style="float:left;">
-                <div class="button" onclick="requestElevator(9)">request</div>
-                <div class="button" onclick="requestElevator(8)">request</div>
-                <div class="button" onclick="requestElevator(7)">request</div>
-                <div class="button" onclick="requestElevator(6)">request</div>
-                <div class="button" onclick="requestElevator(5)">request</div>
-                <div class="button" onclick="requestElevator(4)">request</div>
-                <div class="button" onclick="requestElevator(3)">request</div>
-                <div class="button" onclick="requestElevator(2)">request</div>
-                <div class="button" onclick="requestElevator(1)">request</div>
-                <div class="button" onclick="requestElevator(0)">request</div>
+            <div id="controls" style="float:left;">
             </div>
         </div>
 

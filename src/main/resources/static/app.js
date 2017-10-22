@@ -5,21 +5,44 @@ BASE_PATH = BASE_URL+"/rest/v1";
 function httpGet(theUrl, callback)
 {
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.onreadystatechange = function() { 
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-            callback(xmlHttp.responseText);
+    xmlHttp.onreadystatechange = () => { 
+        if (xmlHttp.readyState == 4) {
+            if(xmlHttp.status == 200) {
+                callback(xmlHttp.responseText);
+            } else {
+                console.error(xmlHttp.responseText);
+            }
+            
+        }
     }
     xmlHttp.open("GET", theUrl, true);
     xmlHttp.send(null);
 }
 
-function duplicate(elevator) {
+function renderElevator(elevator, numberOfFloors) {
     var original = document.getElementById('base-elevator');
     var clone = original.cloneNode(true);
     clone.id = "elevator-" + elevator.id;
     clone.style = "float: left;";
+    clone.children[0].getElementsByTagName("input")[0].setAttribute("max", numberOfFloors-1);
+    for(let i=0; i<numberOfFloors-1; i++) {
+        let floor = clone.children[0].cloneNode(true);
+        floor.getElementsByTagName("input")[0].setAttribute("max", numberOfFloors-1);
+        clone.appendChild(floor);
+    }
     moveElevator(clone.children, elevator.currentFloor, elevator.busy?"busy":"available");
     original.parentNode.appendChild(clone);
+}
+
+function renderControls(numberOfFloors) {
+    for(let i=numberOfFloors-1; i>=0; i--) {
+        let control = document.createElement("div");
+        control.appendChild(document.createTextNode("request"));
+        control.classList.add("button");
+        control.addEventListener("click", requestElevator, false);
+        control.setAttribute("data-floor", i);
+        document.getElementById('controls').appendChild(control);
+    }
 }
 
 function moveElevator(floors, targetFloor, className) {
@@ -39,17 +62,16 @@ function selectFloor(element) {
     }
 }
 
-function requestElevator(floor) {
-    httpGet(BASE_PATH + "/request/"+floor, (data) => {
-        console.log(data);
-    });
+function requestElevator(event) {
+    let floor = event.srcElement.getAttribute('data-floor');
+    httpGet(BASE_PATH + "/request/"+floor, (data) => {});
 }
 
 function connect() {
     var socket = new SockJS(BASE_URL+'/connect');
     stompClient = Stomp.over(socket);
+    stompClient.debug = null;
     stompClient.connect({}, function (frame) {
-        console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/arrivedToFloor', (message) => {
             let elevator = JSON.parse(message.body).elevator;
             let element = document.getElementById("elevator-"+elevator.id);
@@ -68,7 +90,6 @@ function goToFloor(event) {
         let targetFloor = event.srcElement.value;
         let elevator = event.srcElement.parentNode.parentNode.id.split("-")[1];
         httpGet(BASE_PATH + "/elevator/"+elevator+"/move/"+targetFloor, (data) => {
-            console.log(data);
             event.srcElement.classList.add("hidden");
         })
     }
@@ -76,10 +97,10 @@ function goToFloor(event) {
 }
 
 httpGet(BASE_PATH + "/shaft", (data) => {
-    elevators = JSON.parse(data);
-    console.log(elevators);
-    elevators.forEach((elevator) => {
-        duplicate(elevator);
+    shaft = JSON.parse(data);
+    shaft.elevators.forEach((elevator) => {
+        renderElevator(elevator, shaft.numberOfFloors);
     });
+    renderControls(shaft.numberOfFloors);
 });
 connect();
