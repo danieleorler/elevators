@@ -1,5 +1,5 @@
 stompClient = undefined;
-BASE_URL = "http://192.168.0.2:8080";
+BASE_URL = "http://localhost:8080";
 BASE_PATH = BASE_URL+"/rest/v1";
 
 function httpGet(theUrl, callback)
