@@ -1,7 +1,5 @@
 package com.tingco.codechallenge.elevator;
 
-import com.tingco.codechallenge.elevator.api.Elevator;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertEquals;
