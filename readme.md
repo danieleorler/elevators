@@ -56,7 +56,7 @@ Now point you browser (please use chrome) to http://localhost:8080 you should se
 ### Go Social
 If you want to see how the app works with multiple users you can change the backend address on the javascript app (line 2 in `resouces/static/app.js`) to the ip of you computer (i.e. 192.168.0.2).   
 Share the new address (i.e. http://192.168.0.2:8080) with somebody on the same network and start moving elevators.
-You can even try from a smartphone (the experience is total crap though)
+You can even try from a smartphone (the experience is a total crap though)
 
 ## Limitations / Future Improvements
 
