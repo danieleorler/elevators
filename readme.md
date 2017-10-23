@@ -1,44 +1,48 @@
 # Elevator Coding Challenge
 
-Create an elevator controller!
+## Implementation
 
-This is a skeleton project with two interfaces that you must implement.
+The project is composed by:
+* the backend which is a spring boot application
+* the frontend which is a simple (and pretty crappy) javascript application
 
-You are going to create an Elevator Controller and a number of Elevators that will be managed by the controller. There are a few extra classes already added to the project to get you up and running quickly.
+The operations on elevators are async, for example if you ask for an elevator you'll get back which elevator is coming to you.
+But since the elevators don't move instantaneously, it will take a bit of time for the to get to you.
+Don't worry, you'll have a way to track the elevator progress.
 
-## To Do
+### Backend
+The `ElevatorControllerService` is responsible for dispatching the closest elevator to the user which required one.
+It also allows to get an elevator by id, in order to simulate when the user actually enters an elevator.
 
-There are two interfaces to implement.
+The `ElevatorImpl` class represents the elevator itself. When it steps to the next floor it sleeps for some time (configurable) to simulate the movement.
+This class fires events when the elevator stops moving or when it reaches a floor.
 
- * `Elevator` - this is the elevator itself and has a few public methods to take care of. There can be n number of elevators at the same time
+The events are handled by `ElevatorChangesSubscriber` which, among other things, forwards the event to a WebSocket topic.
 
- * `ElevatorController` - this is the elevator manager that keeps track of all the elevators running in the elevator shaft. There should be only one ElevatorController
+There are 3 REST endpoints to interact with the elevators:
 
-### Bonus Classes
+`GET /shaft`
+returns the current status of the elevators' shaft
 
-There are a few classes added to get you faster up and running. It is not mandatory to use these classes in your solution but you can use them to cut time in boiler plate coding.
+`GET /request/{floor}`
+requests an elevator to the floor {floor}
 
- * `ElevatorControllerEndPoints` for REST features. If you would like to use them in a test or to support a GUI here is already a basic skeleton class for you
+`GET /elevator/{id}/move/{floor}`
+moves the elevator {id} to the floor {floor}
 
- * `ElevatorApplication` class for starting the Spring container and there are a few beans you can use as well
 
- * There are two test classes added to get you up and running faster with tests and simulations
+### FrontEnd
+This is just a super fast implementation of a javascript client and it is served by the same spring boot app running the backend.
+It shows (in real time) the status of the shaft and allows to request and move elevators.
+The elevators are controlled via HTTP requests to the backend, while their position is updated by listening to a WebSocket topic.
+You can find instruction on how to use the UI on the homepage http://localhost:8080
 
-## What We Expect
+N.B. only tested on Chrome on a Mac.
 
-Implement the elevator system and make it as real as possible when it comes to the logic. Which elevator is best suited for a waiting floor, more requests than available elevators and so on.
+## Configuration
+The number of elevators and number of floors is configurable from the file `application.properties`
 
-Write a test or a simulation that runs the system with a number of floors and elevators. The numbers should be flexible and the system must work with one to many elevators.
-
-Document how we start, simulate and monitor your solution. If there is a GUI or logging for monitoring does not matter as long as you describe how it is supposed to be done.
-
-Have fun! This is not a trap. It is a code challenge to check coding style etc. If there are features you don't have time to add or if you have future changes in mind, write comments or document them.
-
-### Deliver Your Solution
-
-Add the code to a github or bitbucket repository. You can also make an archive of the project and e-mail it to us. We would like to see your solution within 7 days.
- 
-## Build And Run (as is)
+## Build And Run
 
 As the project is, the Spring app can be started as seen below.
 
@@ -47,8 +51,20 @@ build and run the code with Maven
     mvn package
     mvn spring-boot:run
 
-or start the target JAR file 
+Now point you browser (please use chrome) to http://localhost:8080 you should see the initial status of the shaft and you can interact with it.
 
-    mvn package
-    java -jar target/elevator-1.0-SNAPSHOT.jar
+### Go Social
+If you want to see how the app works with multiple users you can change the backend address on the javascript app (line 2 in `resouces/static/app.js`) to the ip of you computer (i.e. 192.168.0.2).
+Share the new address (i.e. http://192.168.0.2:8080) with somebody on the same network and start moving elevators.
+You can even try from a smartphone (the experience is total crap though)
+
+## Limitations / Future Improvements
+
+### elevators don't go below floor 0
+This could be fixed with a set of properties to configure lower and upper bound
+
+### elevators serve a user to completion before being available again
+this means that it won't stop picking up somebody on his way to the target.
+The solution could be adding a queue of destinations to each elevator.
+
 
